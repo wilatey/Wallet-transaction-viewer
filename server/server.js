@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const WebSocket = require("ws");
 const db = require("./db");
 require("dotenv").config();
 
@@ -7,7 +8,53 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT;
+
+const server = app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+const clients = new Set();
+
+const wss = new WebSocket.Server({ server });
+
+// handle clients connection via Websocket
+wss.on("connection", (ws) => {
+  console.log("Client connected via WebSocket");
+  clients.add(ws);
+
+  ws.on("message", (message) => {
+    const { type, walletAddress } = JSON.parse(message.toString());
+    if (type === "subscribe") {
+      ws.walletAddress = walletAddress;
+    }
+  });
+
+  ws.on("close", () => {
+    console.log("Client disconnected");
+    clients.delete(ws);
+  });
+});
+
+wss.on("message", (message) => {
+  console.log(`Received message: ${message}`);
+});
+
+function broadcaastTransaction(transactions) {
+  const mssage = JSON.stringify({
+    type: "New_Transaction",
+    data: transactions,
+  });
+  clients.forEach((client) => {
+    if (
+      client.readyState === client.OPEN &&
+      (!client.walletAddress ||
+        client.walletAddress === transactions.wallet_address)
+    ) {
+      client.send(message);
+    }
+  });
+}
 
 db.pool.connect((err, client, release) => {
   if (err) {
@@ -16,43 +63,4 @@ db.pool.connect((err, client, release) => {
   }
   console.log("Connected to PostgreSQL database!");
   release();
-});
-
-app.post("/setup-db", async (req, res) => {
-  try {
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(50) NOT NULL,
-        email VARCHAR(100) NOT NULL UNIQUE
-      );
-      CREATE TABLE IF NOT EXISTS transactions (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id),
-        amount DECIMAL(10, 2) NOT NULL,
-        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        description TEXT
-      );
-    `);
-    res.status(200).send("Database tables created!");
-  } catch (err) {
-    console.error("Error setting up database:", err.message);
-    res.status(500).send("Error setting up database");
-  }
-});
-
-app.get("/transactions", async (req, res) => {
-  try {
-    const result = await db.query(
-      "SELECT * FROM transactions ORDER BY date DESC"
-    );
-    res.status(200).json(result.rows);
-  } catch (err) {
-    console.error("Error fetching transactions:", err.message);
-    res.status(500).send("Error fetching transactions");
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });
