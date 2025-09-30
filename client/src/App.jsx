@@ -5,6 +5,15 @@ import {
 } from "web3modal-web3js/react";
 import { Outlet, useNavigate, Link } from "react-router";
 import TransactionListener from "../components/TransactionListener";
+import {
+  GrBundle,
+  GrCreditCard,
+  GrDashboard,
+  GrTransaction,
+} from "react-icons/gr";
+import { TbMoneybag } from "react-icons/tb";
+import { LuChartPie } from "react-icons/lu";
+import { BiDockTop } from "react-icons/bi";
 
 const projectId = import.meta.env.VITE_PROJECT_ID;
 
@@ -46,45 +55,43 @@ function App() {
   const handleConnect = async () => {
     if (isConnected) {
       navigate("/dashboard");
-    } else {
-      try {
-        await modal.open();
-      } catch (error) {
-        console.error("Error opening modal:", error);
-      }
     }
   };
 
   return (
-    <div>
-      <header>
-        <h1 className="icontitle">LTRansact</h1>
-        <button onClick={handleConnect}>
-          {isConnected ? "Go to Dashboard" : "Connect Wallet"}
-        </button>
-
-        <nav className="nav">
+    <div className="flex flex-col md:grid md:grid-cols-6">
+      <aside className="general-menu md:col-span-1 border-r-1 border-r-gray-200">
+        <h1 className="icontitle">
+          LTRansact
+          <BiDockTop onClick={() => {}} className="ml-10" size={24} />
+        </h1>
+        <p className="text-sm text-neutral-400/50">GENERAL MENU</p>
+        <nav className="nav mt-4 text-gray-500">
           <ul>
-            <li>GENERAL MENU</li>
             <li>
+              <GrDashboard className="inline-block mr-2 mt-1" />
               <Link to="/dashboard">Dashboard</Link>
             </li>
             <li>
+              <GrCreditCard className="inline-block mr-2 mt-1" />
               <Link to="/accounts">Accounts</Link>
             </li>
             <li>
+              <GrTransaction className="inline-block mr-2 mt-1" />
               <Link to="/transactions">Transactions</Link>
             </li>
             <li>
+              <TbMoneybag className="inline-block mr-2 mt-1" />
               <Link to="/budgets">Budgets</Link>
             </li>
             <li>
+              <LuChartPie className="inline-block mr-2 mt-1" />
               <Link to="/report">Report</Link>
             </li>
           </ul>
         </nav>
-      </header>
-      <main>
+      </aside>
+      <main className="md:col-span-5  bg-white">
         <Outlet />
       </main>
       <TransactionListener walletAddress={account?.address} />

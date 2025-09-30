@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
@@ -36,12 +36,8 @@ wss.on("connection", (ws) => {
   });
 });
 
-wss.on("message", (message) => {
-  console.log(`Received message: ${message}`);
-});
-
-function broadcaastTransaction(transactions) {
-  const mssage = JSON.stringify({
+function broadcastTransaction(transactions) {
+  const message = JSON.stringify({
     type: "New_Transaction",
     data: transactions,
   });
@@ -56,11 +52,30 @@ function broadcaastTransaction(transactions) {
   });
 }
 
-db.pool.connect((err, client, release) => {
-  if (err) {
-    console.error("Error connecting to PostgreSQL:", err.message, err.stack);
-    process.exit(1);
+db.pool.connect((error, client, release) => {
+  if (error) {
+    console.error(
+      "Error connecting to PostgreSQL:",
+      error.message,
+      error.stack
+    );
+    return;
   }
+
   console.log("Connected to PostgreSQL database!");
-  release();
+
+  client.query("LISTEN new_transaction").catch((err) => {
+    console.error("Error executing LISTEN query: ", err.stack);
+  });
+
+  client.on("notification", async (msg) => {
+    if (msg.channel === "new_transaction") {
+      try {
+        const payload = JSON.parse(msg.payload);
+        broadcastTransaction(payload);
+      } catch (error) {
+        console.error("Error processing notification: ", error);
+      }
+    }
+  });
 });

@@ -10,6 +10,7 @@
 
   --animate-fade-in: fade-in 0.6s ease-out forwards;
   --animate-pulse: pulse 4s ease-in-out infinite;
+  --animate-ease: ease 0.3s ease-out forwards;
 
   @keyframes fade-in {
     from {
@@ -29,6 +30,17 @@
     ,
     50% {
       opacity: 0.7;
+    }
+  }
+
+  @keyframes ease {
+    from {
+      opacity: 0.5;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }
@@ -76,17 +88,44 @@
 }
 
 @utility icontitle {
-  @apply w-screen min-h-max flex justify-items-start  top-5 left-5 text-3xl font-bold;
+  @apply max-h-min *:md:flex flex flex-1 justify-center items-center p-5 text-xl font-bold text-wrap;
+}
+
+@utility general-menu {
+  @apply min-h-max flex flex-col flex-1 text-gray-600 text-lg font-semibold bg-primary/30;
 }
 
 @utility nav {
-  @apply w-1/4 flex justify-normal justify-items-start items-start;
   ul {
-    @apply flex w-1/12 gap-6 justify-center items-center-safe text-center flex-col flex-1 list-none p-0 m-0;
+    @apply flex *:md:flex gap-4 text-center flex-col flex-1 list-none;
     li {
-      @apply text-sm font-medium text-gray-600 hover:text-gray-900;
+      @apply md:inline-flex text-wrap h-10 text-sm font-medium pt-2.5 justify-center items-start text-gray-600 hover:bg-gray-300/30 rounded-lg
+      cursor-pointer transition-all duration-200 ease-in-out;
     }
   }
+}
+
+@utility pageheader {
+  @apply flex flex-col text-left mb-6;
+}
+
+@utility searchbar {
+  @apply flex items-center bg-card border border-border rounded-lg px-3 py-1.5 mt-5 ml-5 shadow-sm;
+  input {
+    @apply flex-1 bg-transparent outline-none text-sm text-foreground placeholder:text-gray-400;
+  }
+  svg {
+    @apply text-gray-400;
+  }
+}
+
+@utility icon {
+  @apply relative top-10 left-7.25 text-gray-400;
+  transform: translateY(50%);
+}
+
+@utility bell {
+  @apply border-1 rounded-sm relative left-3/4 bottom-7;
 }
 
 #root {
