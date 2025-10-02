@@ -18,7 +18,6 @@ const clients = new Set();
 
 const wss = new WebSocket.Server({ server });
 
-// handle clients connection via Websocket
 wss.on("connection", (ws) => {
   console.log("Client connected via WebSocket");
   clients.add(ws);

@@ -1,22 +1,131 @@
 import { BiSearch } from "react-icons/bi";
-import { CiBellOn } from "react-icons/ci";
+import {
+  CiAvocado,
+  CiBellOn,
+  CiCalendar,
+  CiCloud,
+  CiShare2,
+} from "react-icons/ci";
+import { IoCloudUploadOutline } from "react-icons/io5";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { useEffect, useState } from "react";
 
 function Dashboard() {
+  const [istDropdownOpen, setisDropDownOpen] = useState(false);
+  const [currentDateTime, setcurrentDateTime] = useState(new Date());
+
+  const handleAvatarClick = () => {
+    setisDropDownOpen(!istDropdownOpen);
+  };
+
+  const handleOptionClick = (option) => {
+    setisDropDownOpen(false);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setcurrentDateTime(new Date());
+    }, 1000);
+  });
+
   return (
-    <div className="flex flex-col">
-      <header className="border-b-1 border-b-gray-200  mb-10">
-        <BiSearch size={20} className="icon" />
-        <input className="searchbar" placeholder="      Search" />
-        <CiBellOn size={25} className="bell" />
+    <div className="w-full flex flex-col">
+      {/* {"Header Search"} */}
+      <header className="flex items-center justify-between p-4 bg-white border-b border-gray-200 shadow-sm">
+        <div className="flex-1 mx-4 max-w-min">
+          <div className="searchbar">
+            <BiSearch size={20} />
+            <input type="text" placeholder="Search" />
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-4">
+          <CiBellOn size={40} className="bell" />
+          <CiShare2 size={40} className="share" />
+          <div className="h-10 border-l-1 pl-10  border-l-gray-200">
+            <div className="cursor-pointer" onClick={handleAvatarClick}>
+              <Avatar>
+                <AvatarImage
+                  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+                  alt="User avatar"
+                  className="avatarImage"
+                />
+                <AvatarFallback
+                  delayMs={600}
+                  className="rounded-full bg-gray-300 flex items-center justify-center"
+                >
+                  JD
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            {istDropdownOpen && (
+              <div className="absolute right-0 mt-5 w-28 bg-white border border-gray-200 rounded-lg shadow-lg">
+                <ul>
+                  <li
+                    className="avatarlist"
+                    onClick={() => handleOptionClick("Profile")}
+                  >
+                    Profile
+                  </li>
+                  <li
+                    className="avatarlist"
+                    onClick={() => handleOptionClick("Settings")}
+                  >
+                    Settings
+                  </li>
+                  <li
+                    className="avatarlist"
+                    onClick={() => handleOptionClick("Logout")}
+                  >
+                    Logout
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
       </header>
-      <div className="ml-5">
-        <h2 className="pageheader text-2xl font-bold justify-start items-start ">
-          Welcome back, !
-        </h2>
-        <p className="text-gray-500">
-          Track your finances and achieve your financial goals
-        </p>
+
+      {/* {Dashboard heading} */}
+      <div className="p-5">
+        <div className="justify-between flex-wrap flex items-end gap-4">
+          <div className="flex-1">
+            <h2 className="pageheader">Welcome back, User!</h2>
+            <p className="w-100 text-gray-500 mt-2">
+              Track your finances and achieve your financial goals
+            </p>
+          </div>
+
+          <div className="items-center space-x-4">
+            <div className="w-32 px-2 flex flex-1 rounded-lg shadow-sm border-1 border-gray-200">
+              <CiCalendar size={35} />
+              <p className="pt-3 text-sm shadow-sm">
+                {currentDateTime.toLocaleDateString()}
+              </p>
+            </div>
+          </div>
+
+          <div className="items-center space-x-2">
+            <div className="w-32 px-2 flex flex-1 rounded-lg shadow-sm border-1 border-gray-200 justify">
+              <IoCloudUploadOutline size={35} />
+              <p className="pt-2 pl-2 pr-2 text-sm shadow-sm">explore</p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* {
+      @todo:Cards with 
+      i. Total balance, 
+      ii. Total income, 
+      iii. Total Expenditure, 
+      iv. Cash Flow, 
+      v. Recent Transaction, 
+      vi. Payment and Transfer, 
+      vii. Objectives} 
+      */}
+
       <div className="mt-4 bg-white p-4 rounded shadow">
         <h3 className="text-lg font-semibold">Spending Limits</h3>
         <p className="text-sm text-gray-500">
@@ -49,4 +158,5 @@ function Dashboard() {
     </div>
   );
 }
+
 export default Dashboard;
