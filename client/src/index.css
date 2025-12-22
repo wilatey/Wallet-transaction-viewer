@@ -125,16 +125,16 @@
   transform: translateY(50%);
 }
 
-@utility bell {
-  @apply border-1 mx-7 rounded-sm border-gray-300 shadow-sm px-1 cursor-pointer;
+@utility selector1 {
+  @apply border-1 mx-6 rounded-lg border-gray-500/80 shadow-sm p-2 hover:bg-gray-100 cursor-pointer;
 }
 
-@utility share {
-  @apply border-1 px-1 mr-20 rounded-sm border-gray-300 shadow-sm cursor-pointer;
+@utility selector2 {
+  @apply border-1 px-1 mr-18 rounded-lg border-gray-500/80 shadow-sm p-2 hover:bg-gray-100 cursor-pointer;
 }
 
 @utility avatarImage {
-  @apply w-10 h-10 ring-1 rounded-full mask-radial-at-center;
+  @apply w-8 h-8 ring-1 rounded-full mask-radial-at-center mask-center mask-radial-from-100%;
 }
 
 @utility avatarlist {
@@ -142,19 +142,23 @@
 }
 
 @utility card {
-  @apply bg-white p-4 rounded shadow flex-1 m-2;
+  @apply bg-gray-50/20 p-4 border-1 border-gray-300 rounded-lg shadow-lg flex-1 m-2;
 }
 
 @utility card-title {
-  @apply text-lg font-semibold;
+  @apply text-xl font-semibold;
 }
 
 @utility card-detail {
-  @apply text-sm text-gray-500;
+  @apply text-sm font-semibold text-gray-500/50;
 }
 
 @utility chart-container {
   @apply h-40 flex items-center justify-center bg-gray-100 mt-2;
+}
+
+@utility acc_button_setting {
+  @apply p-2 hover:bg-gray-100 rounded-lg cursor-pointer;
 }
 
 #root {
