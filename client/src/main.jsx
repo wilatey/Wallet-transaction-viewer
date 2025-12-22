@@ -1,15 +1,16 @@
 import ReactDOM from "react-dom/client";
-import { StrictMode } from "react";
+import { lazy, Suspense, StrictMode } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "../components/ErrorPage";
 import App from "./App";
-import Dashboard from "../components/Dashboard";
-import Accounts from "../components/Accounts";
-import Transaction from "../components/Transaction";
 import TransactionDetail from "../components/TransactionDetail";
-import Budgets from "../components/Budgets";
-import Report from "../components/Report";
 import "./index.css";
+
+const Dashboard = lazy(() => import("../components/Dashboard"));
+const Accounts = lazy(() => import("../components/Accounts"));
+const Transaction = lazy(() => import("../components/Transaction"));
+const Budgets = lazy(() => import("../components/Budgets"));
+const Report = lazy(() => import("../components/Report"));
 
 const router = createBrowserRouter([
   {
@@ -19,15 +20,39 @@ const router = createBrowserRouter([
     children: [
       {
         path: "dashboard",
-        element: <Dashboard />,
+        element: (
+          <Suspense
+            fallback={
+              <div className="p-8 text-center">Loading dashboard...</div>
+            }
+          >
+            <Dashboard />
+          </Suspense>
+        ),
       },
       {
         path: "accounts",
-        element: <Accounts />,
+        element: (
+          <Suspense
+            fallback={
+              <div className="p-8 text-center">Loading Accounts...</div>
+            }
+          >
+            <Accounts />
+          </Suspense>
+        ),
       },
       {
         path: "transactions",
-        element: <Transaction />,
+        element: (
+          <Suspense
+            fallback={
+              <div className="p-8 text-center">Loading Transactions...</div>
+            }
+          >
+            <Transaction />
+          </Suspense>
+        ),
         children: [
           {
             path: ":transactionId",
@@ -37,11 +62,23 @@ const router = createBrowserRouter([
       },
       {
         path: "budgets",
-        element: <Budgets />,
+        element: (
+          <Suspense
+            fallback={<div className="p-8 text-center">Loading Budgets...</div>}
+          >
+            <Budgets />
+          </Suspense>
+        ),
       },
       {
         path: "report",
-        element: <Report />,
+        element: (
+          <Suspense
+            fallback={<div className="p-8 text-center">Loading Report...</div>}
+          >
+            <Report />
+          </Suspense>
+        ),
       },
     ],
   },
