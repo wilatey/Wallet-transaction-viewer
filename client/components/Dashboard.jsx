@@ -13,8 +13,10 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useEffect, useState, useMemo } from "react";
+import { useNavigate } from "react-router";
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [istDropdownOpen, setisDropDownOpen] = useState(false);
   const [currentDateTime, setcurrentDateTime] = useState(new Date());
 
@@ -173,7 +175,12 @@ function Dashboard() {
               <h3 className="text-lg font-bold text-gray-800">
                 Recent Transactions
               </h3>
-              <button className="text-sm text-blue-600 font-medium hover:text-blue-700 cursor-pointer">
+              <button
+                onClick={() => {
+                  navigate("/transactions");
+                }}
+                className="text-sm text-blue-600 font-medium hover:text-blue-700 cursor-pointer"
+              >
                 View All
               </button>
             </div>
