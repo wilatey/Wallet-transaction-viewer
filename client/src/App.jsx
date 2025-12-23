@@ -59,38 +59,38 @@ function App() {
     }
   }, [isConnected, navigate, location.pathname]);
 
-  if (!isConnected) {
-    return (
-      <div className="h-screen w-screen flex items-center justify-center bg-gray-50 overflow-hidden relative">
-        {/* Decorative Background Elements */}
-        <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-400/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-400/30 rounded-full blur-3xl" />
+  // if (!isConnected) {
+  //   return (
+  //     <div className="h-screen w-screen flex items-center justify-center bg-gray-50 overflow-hidden relative">
+  //       {/* Decorative Background Elements */}
+  //       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-400/30 rounded-full blur-3xl" />
+  //       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-400/30 rounded-full blur-3xl" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="z-10 bg-white/80 backdrop-blur-xl p-10 rounded-3xl shadow-2xl border border-white/50 text-center max-w-md w-full"
-        >
-          <div className="mb-6 flex justify-center">
-            <div className="p-4 bg-blue-600 rounded-2xl shadow-lg shadow-blue-200">
-              <BiDockTop className="text-white text-4xl" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">LTRansact</h1>
-          <p className="text-gray-500 mb-8">
-            Securely manage your assets and track transactions in real-time.
-          </p>
+  //       <motion.div
+  //         initial={{ opacity: 0, y: 20 }}
+  //         animate={{ opacity: 1, y: 0 }}
+  //         className="z-10 bg-white/80 backdrop-blur-xl p-10 rounded-3xl shadow-2xl border border-white/50 text-center max-w-md w-full"
+  //       >
+  //         <div className="mb-6 flex justify-center">
+  //           <div className="p-4 bg-blue-600 rounded-2xl shadow-lg shadow-blue-200">
+  //             <BiDockTop className="text-white text-4xl" />
+  //           </div>
+  //         </div>
+  //         <h1 className="text-3xl font-bold text-gray-800 mb-2">LTRansact</h1>
+  //         <p className="text-gray-500 mb-8">
+  //           Securely manage your assets and track transactions in real-time.
+  //         </p>
 
-          <button
-            onClick={() => open()}
-            className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg transform transition hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-          >
-            Connect Wallet
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
+  //         <button
+  //           onClick={() => open()}
+  //           className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg transform transition hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+  //         >
+  //           Connect Wallet
+  //         </button>
+  //       </motion.div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="w-screen flex flex-col md:grid md:grid-cols-6 h-screen overflow-hidden">
