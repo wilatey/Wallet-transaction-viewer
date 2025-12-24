@@ -1,96 +1,44 @@
-import { useEffect } from "react";
-import {
-  createWeb3Modal,
-  defaultConfig,
-  useWeb3ModalAccount,
-  useWeb3Modal,
-} from "web3modal-web3js/react";
+// Fixed App.jsx (Removed WalletConnect, added state/import, cleaned up)
+import { useEffect, useState } from "react"; // Added useState
 import { Outlet, useNavigate, NavLink, useLocation } from "react-router-dom";
-import TransactionListener from "../components/TransactionListener";
-import Header from "../components/Header"; // Fixed: Imported Header
+import Header from "../components/Header";
+import Login from "../components/Login"; // Added import
 import { GrCreditCard, GrDashboard, GrTransaction } from "react-icons/gr";
 import { TbMoneybag } from "react-icons/tb";
 import { LuChartPie } from "react-icons/lu";
 import { BiDockTop } from "react-icons/bi";
 import { motion, AnimatePresence } from "framer-motion";
 
-const projectId = import.meta.env.VITE_PROJECT_ID;
-
-const mainnet = {
-  chainId: 1,
-  name: "Ethereum",
-  currency: "ETH",
-  explorerUrl: "https://mainnet.infura.io/v3/d2bef4559f634a1e87e6c99a3c155606",
-};
-
-const metadata = {
-  name: "E-Wallet Transaction Viewer",
-  description: "A web application for viewing wallet transactions",
-  url: "https://jocular-bunny-536eb2.netlify.app/",
-  icons: [""],
-};
-
-const web3Config = defaultConfig({
-  metadata,
-
-  enableEIP6963: true,
-  enableInjected: true,
-  enableCoinbase: true,
-  rpcUrl: "https://mainnet.infura.io/v3/d2bef4559f634a1e87e6c99a3c155606",
-  defaultChainId: 1,
-});
-
-createWeb3Modal({
-  web3Config,
-  chains: [mainnet],
-  projectId,
-  enableAnalytics: true,
-});
-
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isConnected, account } = useWeb3ModalAccount();
-  const { open } = useWeb3Modal();
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Added state
 
   useEffect(() => {
-    if (isConnected && location.pathname === "/") {
-      navigate("/dashboard");
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsAuthenticated(true);
+      if (location.pathname === "/" || location.pathname === "/login") {
+        navigate("/dashboard");
+      }
+    } else {
+      setIsAuthenticated(false);
+      if (location.pathname !== "/login") {
+        navigate("/login");
+      }
     }
-  }, [isConnected, navigate, location.pathname]);
+  }, [location.pathname, navigate]);
 
-  // if (!isConnected) {
-  //   return (
-  //     <div className="h-screen w-screen flex items-center justify-center bg-gray-50 overflow-hidden relative">
-  //       {/* Decorative Background Elements */}
-  //       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-400/30 rounded-full blur-3xl" />
-  //       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-purple-400/30 rounded-full blur-3xl" />
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userEmail");
+    setIsAuthenticated(false);
+    navigate("/login");
+  };
 
-  //       <motion.div
-  //         initial={{ opacity: 0, y: 20 }}
-  //         animate={{ opacity: 1, y: 0 }}
-  //         className="z-10 bg-white/80 backdrop-blur-xl p-10 rounded-3xl shadow-2xl border border-white/50 text-center max-w-md w-full"
-  //       >
-  //         <div className="mb-6 flex justify-center">
-  //           <div className="p-4 bg-blue-600 rounded-2xl shadow-lg shadow-blue-200">
-  //             <BiDockTop className="text-white text-4xl" />
-  //           </div>
-  //         </div>
-  //         <h1 className="text-3xl font-bold text-gray-800 mb-2">LTRansact</h1>
-  //         <p className="text-gray-500 mb-8">
-  //           Securely manage your assets and track transactions in real-time.
-  //         </p>
-
-  //         <button
-  //           onClick={() => open()}
-  //           className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg transform transition hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-  //         >
-  //           Connect Wallet
-  //         </button>
-  //       </motion.div>
-  //     </div>
-  //   );
-  // }
+  if (!isAuthenticated) {
+    return location.pathname === "/login" ? <Outlet /> : <Login />;
+  }
 
   return (
     <div className="w-screen flex flex-col md:grid md:grid-cols-6 h-screen overflow-hidden">
@@ -104,7 +52,6 @@ function App() {
           </h1>
         </div>
 
-        {/* Restored Sidebar Navigation */}
         <nav className="flex-1 px-4 overflow-y-auto mt-4">
           <ul className="space-y-2">
             {[
@@ -136,11 +83,19 @@ function App() {
             ))}
           </ul>
         </nav>
+
+        <div className="p-4">
+          <button
+            onClick={handleLogout}
+            className="w-full py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg"
+          >
+            Logout
+          </button>
+        </div>
       </aside>
 
       <main className="md:col-span-5 bg-white flex flex-col h-full overflow-hidden relative">
         <Header />
-
         <div className="flex-1 overflow-y-auto bg-gray-50">
           <AnimatePresence mode="wait">
             <motion.div
@@ -156,10 +111,6 @@ function App() {
           </AnimatePresence>
         </div>
       </main>
-
-      {account?.address && (
-        <TransactionListener walletAddress={account.address} />
-      )}
     </div>
   );
 }

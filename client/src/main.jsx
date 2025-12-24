@@ -1,10 +1,12 @@
+// Fixed main.jsx
 import ReactDOM from "react-dom/client";
 import { lazy, Suspense, StrictMode } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "../components/ErrorPage";
 import App from "./App";
-import TransactionDetail from "../components/TransactionDetail";
 import "./index.css";
+import TransactionDetail from "../components/TransactionDetail";
+import Login from "../components/Login";
 
 const Dashboard = lazy(() => import("../components/Dashboard"));
 const Accounts = lazy(() => import("../components/Accounts"));
@@ -18,6 +20,10 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
       {
         path: "dashboard",
         element: (
