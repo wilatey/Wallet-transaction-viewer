@@ -5,14 +5,17 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "../components/ErrorPage";
 import App from "./App";
 import "./index.css";
-import TransactionDetail from "../components/TransactionDetail";
-import Login from "../components/Login";
+import TransactionDetail from "../components/BackendPage/TransactionDetail";
+import Login from "../components/FrontPage/Login";
+import Register from "../components/FrontPage/Register";
 
-const Dashboard = lazy(() => import("../components/Dashboard"));
-const Accounts = lazy(() => import("../components/Accounts"));
-const Transaction = lazy(() => import("../components/Transaction"));
-const Budgets = lazy(() => import("../components/Budgets"));
-const Report = lazy(() => import("../components/Report"));
+const Dashboard = lazy(() => import("../components/BackendPage/Dashboard"));
+const Accounts = lazy(() => import("../components/BackendPage/Accounts"));
+const Transaction = lazy(() => import("../components/BackendPage/Transaction"));
+const Budgets = lazy(() => import("../components/BackendPage/Budgets"));
+const Report = lazy(() => import("../components/BackendPage/Report"));
+const Profile = lazy(() => import("../components/FrontPage/Profile"));
+const Setting = lazy(() => import("../components/FrontPage/Setting"));
 
 const router = createBrowserRouter([
   {
@@ -25,6 +28,10 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
+        path: "register",
+        element: <Register />,
+      },
+      {
         path: "dashboard",
         element: (
           <Suspense
@@ -33,6 +40,22 @@ const router = createBrowserRouter([
             }
           >
             <Dashboard />
+          </Suspense>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <Suspense fallback={<div>Loading Profile...</div>}>
+            <Profile />
+          </Suspense>
+        ),
+      },
+      {
+        path: "settings",
+        element: (
+          <Suspense fallback={<div>Loading Settings...</div>}>
+            <Setting />
           </Suspense>
         ),
       },

@@ -1,8 +1,8 @@
 // Fixed App.jsx (Removed WalletConnect, added state/import, cleaned up)
 import { useEffect, useState } from "react"; // Added useState
 import { Outlet, useNavigate, NavLink, useLocation } from "react-router-dom";
-import Header from "../components/Header";
-import Login from "../components/Login"; // Added import
+import Header from "../components/BackendPage/Header";
+import Login from "../components/FrontPage/Login"; // Added import
 import { GrCreditCard, GrDashboard, GrTransaction } from "react-icons/gr";
 import { TbMoneybag } from "react-icons/tb";
 import { LuChartPie } from "react-icons/lu";
@@ -18,12 +18,16 @@ function App() {
     const token = localStorage.getItem("authToken");
     if (token) {
       setIsAuthenticated(true);
-      if (location.pathname === "/" || location.pathname === "/login") {
+      if (
+        location.pathname === "/" ||
+        location.pathname === "/login" ||
+        location.pathname === "/register"
+      ) {
         navigate("/dashboard");
       }
     } else {
       setIsAuthenticated(false);
-      if (location.pathname !== "/login") {
+      if (location.pathname !== "/login" && location.pathname !== "/register") {
         navigate("/login");
       }
     }
@@ -37,7 +41,11 @@ function App() {
   };
 
   if (!isAuthenticated) {
-    return location.pathname === "/login" ? <Outlet /> : <Login />;
+    if (location.pathname === "/login" || location.pathname === "/register") {
+      return <Outlet />;
+    } else {
+      return <Login />;
+    }
   }
 
   return (
